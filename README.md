@@ -1,5 +1,6 @@
 # Linear-Regression
-This file contains Linear Regression model for mtcars. 
+This file contains Linear Regression model for mtcars.
+
 Following are validated:
    * Correlation
    * Best fit model
