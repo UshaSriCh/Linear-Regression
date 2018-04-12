@@ -1,0 +1,72 @@
+---
+title: "Linear Reg model for mtcars"
+output: html_notebook
+---
+ 
+#Install Packages & run Libraries
+```{r}
+#install.packages('Metrics')
+library(corrplot)
+library(dplyr)
+```
+
+#Assign mtcars to mtcars_model
+```{r}
+mtcars_model = mtcars
+```
+
+#Genarate model with data mtcars_model for mpg against other parameters
+```{r}
+model = lm(mpg ~ ., data = mtcars_model)
+```
+
+#Summary of the model generated
+```{r}
+summary(model)
+```
+
+#Correlation for mtcars_model
+```{r}
+cor(mtcars_model)
+mtcars_model %>%  select_if(is.numeric) %>% cor() %>% corrplot()
+```
+
+#Identify Training & Test dataset from mtcars_model
+```{r}
+set.seed(723)
+
+index <- sample(1:nrow(mtcars_model),round(nrow(mtcars_model) * 0.7))
+
+train <- mtcars_model[index,]
+
+test <- mtcars_model[-index,]
+```
+
+#Assign test dataset values to test_p eliminating mpg
+```{r}
+test_p <- test %>%  select(-one_of('mpg'))
+```
+
+#Genarate best fit model
+```{r}
+model = lm(mpg ~  wt + qsec + am  + carb, data = mtcars_model)
+
+summary(model)
+```
+
+#Predict the value mpg using model & display the predicted value
+```{r}
+predicted <- predict(model,test_p)
+
+predicted
+```
+
+#calculate Mean Absolute Error & Root Mean Sq Error values
+```{r}
+mean(abs(test$mpg - predicted))
+
+Metrics::rmse(test$mpg,predicted = predicted)
+```
+
+
+
